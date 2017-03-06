@@ -1,0 +1,16 @@
+{
+  "name": "node-tunel-socks5",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./socks5.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.16.0",
+    "express": "~4.14.1",
+    "node-cmd":"2.0.0",
+    "request":"2.79.0",
+    "socks5-http-client":"1.0.2",
+    "serve-favicon":"2.4.1"
+  }
+}
