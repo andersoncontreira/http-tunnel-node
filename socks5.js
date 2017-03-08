@@ -6,6 +6,7 @@ var path = require('path');
 var http = require('http');
 var request = require('request');
 var Agent = require('socks5-http-client/lib/Agent');
+var HttpsAgent = require('socks5-https-client/lib/Agent');
 var DefaultRequest = require('./request/DefaultRequest');
 
 
@@ -27,10 +28,17 @@ app.use(bodyParser.text({type: ['*/xml', '+xml']}));
 
 function executeHttpRequest(defaultRequest, callback) {
 
+    var agent = Agent;
+
+    if (defaultRequest.getUrl().match('https')) {
+        agent = HttpsAgent;
+    }
+    //process.exit(0);
+
     var options = {
         method: defaultRequest.getMethod(),
         url: defaultRequest.getUrl(),
-        agentClass: Agent,
+        agentClass: agent,
         agentOptions: {
             socksHost: socks5Host,
             socksPort: socks5Port
