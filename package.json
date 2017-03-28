@@ -12,6 +12,7 @@
     "request":"2.79.0",
     "socks5-http-client":"1.0.2",
     "socks5-https-client":"1.2.0",
-    "serve-favicon":"2.4.1"
+    "serve-favicon":"2.4.1",
+    "commander":"2.9.0"
   }
 }
