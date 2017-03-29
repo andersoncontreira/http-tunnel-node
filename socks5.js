@@ -18,22 +18,21 @@ var socks5Port = 2222;
 var httpPort = 3456;
 var useSocksFive = true;
 
-// var program = require('commander');
-//
-// program
-//     .version('0.0.1')
-//     .option('-h, --socks5Host', 'Socks5 proxy Host (default: 127.0.0.1)')
-//     .option('-p, --socks5Port', 'Socks5 proxy Port (default: 2222)')
-//     .option('-h, --http-port', 'Http Port (default: 3456)')
-//     .option('-u, --proxy', 'Uses socks5 proxy (true or false)')
-//     .parse(process.argv);
-//
-// socks5Host = (program.socks5Host)? program.socks5host : socks5Host;
-// socks5Port = (program.socks5Port)? program.socks5port : socks5Port;
-// httpPort = (program.httpPort)? program.httpPort : httpPort;
-// useSocksFive = (program.proxy)? true: false;
-//
-// console.log(program.httpPort, program.proxy);
+var program = require('commander');
+
+program
+    .version('0.0.1')
+    .option('-s, --socks5-host [value]', 'Socks5 proxy Host (default: 127.0.0.1)')
+    .option('-r, --socks5-port [value]', 'Socks5 proxy Port (default: 2222)')
+    .option('-t, --http-port [value]', 'Http Port (default: 3456)')
+    .option('-x, --use-proxy [value]', 'Uses socks5 proxy (default: true)');
+
+program.parse(process.argv);
+
+socks5Host = (program.socks5Host)? program.socks5Host : socks5Host;
+socks5Port = (program.socks5Port)? program.socks5Port : socks5Port;
+httpPort = (program.httpPort)? program.httpPort : httpPort;
+useSocksFive = (program.useProxy)? true: false;
 
 if (useSocksFive) {
     console.log(consoleFlag + ' Using socks5 proxy!');
