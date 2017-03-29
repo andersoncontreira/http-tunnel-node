@@ -9,11 +9,36 @@ var Agent = require('socks5-http-client/lib/Agent');
 var HttpsAgent = require('socks5-https-client/lib/Agent');
 var DefaultRequest = require('./request/DefaultRequest');
 
-
+/**
+ * Default
+ */
 var consoleFlag = 'socks5-> ';
 var socks5Host = '127.0.0.1';
 var socks5Port = 2222;
 var httpPort = 3456;
+var useSocksFive = true;
+
+var program = require('commander');
+
+program
+    .version('0.0.1')
+    .option('-s, --socks5-host [value]', 'Socks5 proxy Host (default: 127.0.0.1)')
+    .option('-r, --socks5-port [value]', 'Socks5 proxy Port (default: 2222)')
+    .option('-t, --http-port [value]', 'Http Port (default: 3456)')
+    .option('-x, --use-proxy [value]', 'Uses socks5 proxy (default: true)');
+
+program.parse(process.argv);
+
+socks5Host = (program.socks5Host)? program.socks5Host : socks5Host;
+socks5Port = (program.socks5Port)? program.socks5Port : socks5Port;
+httpPort = (program.httpPort)? program.httpPort : httpPort;
+useSocksFive = (program.useProxy)? true: false;
+
+if (useSocksFive) {
+    console.log(consoleFlag + ' Using socks5 proxy!');
+} else {
+    console.log(consoleFlag + ' Not using a socks5 proxy!');
+}
 
 var app = express();
 //Favicon
@@ -37,13 +62,16 @@ function executeHttpRequest(defaultRequest, callback) {
 
     var options = {
         method: defaultRequest.getMethod(),
-        url: defaultRequest.getUrl(),
-        agentClass: agent,
-        agentOptions: {
+        url: defaultRequest.getUrl()
+    };
+
+    if (useSocksFive) {
+        options['agentClass'] = agent;
+        options['agentOptions'] = {
             socksHost: socks5Host,
             socksPort: socks5Port
-        }
-    };
+        };
+    }
 
     if (defaultRequest.getMethod() != 'GET') {
         options['body'] = defaultRequest.getBody();
