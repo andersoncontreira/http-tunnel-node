@@ -5,6 +5,7 @@ var Agent = require('socks5-http-client/lib/Agent');
 var HttpsAgent = require('socks5-https-client/lib/Agent');
 
 var TunnelHttpRequestor = {
+    consoleFlag: TunnelDefaultConfigs.consoleFlag,
     configs: TunnelDefaultConfigs,
 
     execute: function (requestObject, response, callback) {
@@ -31,6 +32,14 @@ var TunnelHttpRequestor = {
             options['body'] = requestObject.getBody();
             options['headers'] = requestObject.getHeaders();
         }
+
+        console.log('------------------------------------ ');
+        console.log(this.consoleFlag + ' Call: TunnelHttpRequestor.execute(requestObject, response, callback)');
+        console.log('------------------------------------ ');
+        console.log('| Request Options:');
+        console.log('------------------------------------ ');
+        console.log(options);
+        console.log('------------------------------------ ');
 
 
         request(options, function (error, requestResponse) {

@@ -9,7 +9,7 @@ var Tunnel = {
      */
     name: 'Node Tunnel Socks5',
     version: '1.0.5',
-    consoleFlag: 'tunnel -> ',
+    consoleFlag: TunnelConfigs.consoleFlag,
     commander: null,
     /**
      * Messages
