@@ -10,7 +10,7 @@ var request = require('request');
 var url = require('url');
 var Agent = require('socks5-http-client/lib/Agent');
 var HttpsAgent = require('socks5-https-client/lib/Agent');
-var DefaultRequest = require('./request/DefaultRequest');
+var DefaultRequest = require('./modules/DefaultRequest');
 
 
 /**
@@ -49,6 +49,9 @@ if (useSocksFive) {
 } else {
     console.log(consoleFlag + ' Not using a socks5 proxy!');
 }
+
+console.log('This method is not longer supported, please type: node tunnel --help');
+process.exit(0);
 
 var app = express();
 //Favicon
@@ -91,12 +94,12 @@ function executeHttpRequest(defaultRequest, callback) {
 
     var agent = Agent;
 
-    if (defaultRequest.getUrl().match('https')) {
+    if (defaultRequest.getRequestedUrl().match('https')) {
         agent = HttpsAgent;
     }
 
     if (lastRequest != null) {
-        var requestObject = url.parse(defaultRequest.getUrl());
+        var requestObject = url.parse(defaultRequest.getRequestedUrl());
 
         /**
          * Se estiver nulo as propriedades básicas da requisição, significa que é uma
@@ -134,7 +137,7 @@ function executeHttpRequest(defaultRequest, callback) {
 
     var options = {
         method: defaultRequest.getMethod(),
-        url: defaultRequest.getUrl()
+        url: defaultRequest.getRequestedUrl()
     };
 
     if (useSocksFive) {
@@ -174,7 +177,7 @@ function executeHttpRequest(defaultRequest, callback) {
             callback(error, res);
         } else {
 
-            var requestObject = parseUrlRequested(defaultRequest.getUrl());
+            var requestObject = parseUrlRequested(defaultRequest.getRequestedUrl());
             /**
              * Sobrescreve o objeto da ultima requisição
              */
