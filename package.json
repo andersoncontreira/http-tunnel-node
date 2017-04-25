@@ -1,19 +1,22 @@
 {
-  "name": "node-tunel-socks5",
+  "name": "node-tunnel-socks5",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./socks5.js"
+    "start": "node ./tunnel.js"
   },
   "dependencies": {
     "body-parser": "~1.16.0",
     "express": "~4.14.1",
-    "node-cmd":"2.0.0",
-    "request":"2.79.0",
-    "socks5-http-client":"1.0.2",
-    "socks5-https-client":"1.2.0",
-    "serve-favicon":"2.4.1",
-    "commander":"2.9.0",
-    "utf8":"2.1.2"
+    "commander": "2.9.0",
+    "request": "2.79.0",
+    "socks5-http-client": "1.0.2",
+    "socks5-https-client": "1.2.0",
+    "serve-favicon": "2.4.1",
+    "utf8": "2.1.2",
+    "mustache":"2.3.0",
+    "forever-monitor":"1.7.1",
+    "chai": "^3.5.0",
+    "mocha": "^2.3.1"
   }
 }
