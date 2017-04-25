@@ -86,13 +86,28 @@ var TunnelRequestMiddleware = {
             var lastUrl = TunnelRequestMiddleware.lastRequestObject.getRequestedUrl();
             var requestObject = TunnelRequestMiddleware.parseUrl(lastUrl);
 
-            console.log(lastUrl);
-            console.log(requestObject);
-            console.log(request.url);
+
+            console.log('------------------------------------ ');
+            console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.applyParentProperties(request)');
+            console.log('------------------------------------ ');
+            console.log('lastUrl',lastUrl);
+            console.log('requestObject',requestObject);
+            console.log('request.url',request.url);
+            console.log('request.headers.referer',request.headers.referer);
+            console.log('lastRequest.headers.referer',TunnelRequestMiddleware.lastRequest.headers.referer);
+            console.log('------------------------------------ ');
+
+            /**
+             * TODO não funciona bem para navegação cruzada, aonde temos várias abas abertas,
+             * A classe perde a referência do pai
+             */
             /**
              * Só aplica se não encontrar a url anterior e também não encontrar nenhum protocolo
              */
-            if (!request.url.match(requestObject.host) && !request.url.match(requestObject.protocol.replace(':',''))) {
+            if (!request.url.match(requestObject.host)
+                && !(request.url.match('http') || request.url.match('https'))
+            ) {
+
                 if (request.url[0] == '/') {
                     request.url = requestObject.protocol + '//'+requestObject.host + request.url;
                 } else {
@@ -126,9 +141,9 @@ var TunnelRequestMiddleware = {
          * http://www.google.com/
          *
          * Sub-requisições:
-         * textinputassistant/tia.png
+         * /textinputassistant/tia.png
          *
-         * client_204?&atyp=i&biw=1920&bih=463&ei=RvnkWJzgK4KfwASJ-Y-gAQ
+         * /client_204?&atyp=i&biw=1920&bih=463&ei=RvnkWJzgK4KfwASJ-Y-gAQ
          *
          */
         this.applyParentProperties(request);
