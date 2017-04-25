@@ -9,12 +9,20 @@ var TunnelHttpRequestor = {
     configs: TunnelDefaultConfigs,
 
     execute: function (requestObject, response, callback) {
+        /**
+         * Socks5 Agents
+         */
+        //HTTP
         var agent = Agent;
 
+        //HTTPS
         if (requestObject.getRequestedUrl().match('https')) {
             agent = HttpsAgent;
         }
 
+        /**
+         * Opções de requisição
+         */
         var options = {
             method: requestObject.getMethod(),
             url: requestObject.getRequestedUrl()
