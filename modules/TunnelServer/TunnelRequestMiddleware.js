@@ -174,12 +174,7 @@ var TunnelRequestMiddleware = {
 
         var method = request.method;
 
-        // if (request.url[0] == '/') {
-        //     var requestedUrl = request.url.slice(1, request.length);
-        // } else {
-        //     var requestedUrl = request.url;
-        // }
-        if (request.url.match('/htt')) {
+        if (request.url.match('/http') || request.url[0] == '/') {
             var requestedUrl = request.url.slice(1, request.length);
         } else {
             var requestedUrl = request.url;
