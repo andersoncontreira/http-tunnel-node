@@ -84,15 +84,23 @@ var TunnelRequestMiddleware = {
          */
         if (TunnelRequestMiddleware.lastRequestObject != null && TunnelRequestMiddleware.lastRequestObject.getRequestedUrl() != '') {
             var lastUrl = TunnelRequestMiddleware.lastRequestObject.getRequestedUrl();
-            var requestObject = TunnelRequestMiddleware.parseUrl(lastUrl);
+            var lastRequestObject = TunnelRequestMiddleware.parseUrl(lastUrl);
+
+            if (request.url[0] == '/') {
+                var requestedUrl = request.url.slice(1, request.length);
+            } else {
+                var requestedUrl = request.url;
+            }
+            var currentRequestObject = TunnelRequestMiddleware.parseUrl(requestedUrl);
 
 
             console.log('------------------------------------ ');
             console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.applyParentProperties(request)');
             console.log('------------------------------------ ');
             console.log('lastUrl',lastUrl);
-            console.log('requestObject',requestObject);
             console.log('request.url',request.url);
+            console.log('lastRequestObject',lastRequestObject);
+            console.log('currentRequestObject',currentRequestObject);
             console.log('request.headers.referer',request.headers.referer);
             console.log('lastRequest.headers.referer',TunnelRequestMiddleware.lastRequest.headers.referer);
             console.log('------------------------------------ ');
@@ -102,22 +110,38 @@ var TunnelRequestMiddleware = {
              * A classe perde a referência do pai
              */
             /**
-             * Só aplica se não encontrar a url anterior e também não encontrar nenhum protocolo
+             * Só aplica se não encontrar a o host da requisicao atual
+             * e se o protocolo for igual
              */
-            if (!request.url.match(requestObject.host)
-                && !(request.url.match('http') || request.url.match('https'))
-            ) {
+            if (currentRequestObject.host == null) {
 
                 if (request.url[0] == '/') {
-                    request.url = requestObject.protocol + '//'+requestObject.host + request.url;
+                    request.url = lastRequestObject.protocol + '//'+lastRequestObject.host + request.url;
                 } else {
-                    request.url = requestObject.protocol + '//'+requestObject.host + '/' + request.url;
+                    request.url = lastRequestObject.protocol + '//'+lastRequestObject.host + '/' + request.url;
                 }
 
             }
         }
+        console.log('------------------------------------ ');
+        console.log('Result: ');
+        console.log('------------------------------------ ');
+        console.log(request.url, request.headers);
+        console.log('------------------------------------ ');
 
+        return request;
+    },
+    applyHeaders: function (request) {
+        if (request.url[0] == '/') {
+            var requestedUrl = request.url.slice(1, request.length);
+        } else {
+            var requestedUrl = request.url;
+        }
+        var requestObject = TunnelRequestMiddleware.parseUrl(requestedUrl);
 
+        if (requestObject.hasOwnProperty('hostname') && requestObject.hostname != '') {
+            request.headers['host'] = requestObject.hostname;
+        }
 
         return request;
     },
@@ -146,18 +170,28 @@ var TunnelRequestMiddleware = {
          * /client_204?&atyp=i&biw=1920&bih=463&ei=RvnkWJzgK4KfwASJ-Y-gAQ
          *
          */
-        this.applyParentProperties(request);
+        request = this.applyParentProperties(request);
 
         var method = request.method;
-        if (request.url[0] == '/') {
+
+        // if (request.url[0] == '/') {
+        //     var requestedUrl = request.url.slice(1, request.length);
+        // } else {
+        //     var requestedUrl = request.url;
+        // }
+        if (request.url.match('/htt')) {
             var requestedUrl = request.url.slice(1, request.length);
         } else {
             var requestedUrl = request.url;
         }
 
+        /**
+         * Aplica os headers necessários
+         */
+        request = this.applyHeaders(request);
+
         var headers = request.headers;
         var body = request.body;
-
 
 
 
@@ -216,6 +250,11 @@ var TunnelRequestMiddleware = {
 
         }
     },
+    /**
+     *
+     * @param requestedUrl
+     * @returns Url
+     */
     parseUrl: function (requestedUrl) {
         return url.parse(requestedUrl);
     },
