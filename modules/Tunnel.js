@@ -1,6 +1,21 @@
+/**
+ * Configs
+ */
+var packageJson = require('../package.json');
+
 var TunnelConfigs = require('./config/tunnel.configs');
 var TunnelErrors = require('./Tunnel/TunnelErrors');
 var TunnelMessage = require('./Tunnel/TunnelMessage');
+
+try {
+    const uuidV1 = require('uuid/v1');
+} catch (e) {
+    //Tunnel.exit(TunnelErrors.INSTANCE.MODULES_NOT_FOUND);
+    console.log(TunnelConfigs.consoleFlag + 'Message: ' + TunnelErrors.INTIALIZE.MESSAGE);
+    process.exit(TunnelErrors.INTIALIZE.CODE);
+}
+
+
 
 
 var Tunnel = {
@@ -8,15 +23,21 @@ var Tunnel = {
      * Properties
      */
     name: 'Node Tunnel Socks5',
-    version: '1.0.5',
+    description: 'Proxy for Web Service integrations',
+    version: packageJson.version,
     consoleFlag: TunnelConfigs.consoleFlag,
     commander: null,
+    rebootCount: 0,
+    rebootLimit: 30,
+    sessionUUID: null,
     /**
      * Messages
      */
     ERRORS: TunnelErrors,
 
     configs: TunnelConfigs,
+
+    server: null,
 
     initInfo: function () {
         console.log('+-----------------------------');
@@ -72,11 +93,21 @@ var Tunnel = {
             throw new Error(Tunnel.ERRORS.INSTANCE.REQUIRED_COMMANDER_MODULE.MESSAGE, Tunnel.ERRORS.INSTANCE.REQUIRED_COMMANDER_MODULE.CODE);
         }
     },
+    createSessionUUID: function () {
+        this.sessionUUID = uuidV1();
+    },
+    /**
+     * Run the Tunnel Process
+     * @param express
+     */
     run: function (express) {
 
-        var TunnelServer = require('./TunnelServer');
-        TunnelServer.init(express);
-        TunnelServer.run();
+        this.createSessionUUID();
+
+        console.log(this.consoleFlag + 'Session ID: '+ this.sessionUUID);
+
+        this.createTunnelServerInstance(express);
+
 
     },
     /**
@@ -97,11 +128,115 @@ var Tunnel = {
     },
     /**
      * Convert expection to messageObject
-     * @param e
+     * @param Error e
      * @returns {TunnelMessage}
      */
     parseException: function (e) {
         return new TunnelMessage(e.code, e.message);
+    },
+    /**
+     *
+     * @param Error e
+     */
+    treatException: function (e) {
+        var tunnelMessage = this.parseException(e);
+
+        this.logException(tunnelMessage)
+    },
+    /**
+     *
+     * @param TunnelMessage tunnelMessage
+     */
+    logException: function(tunnelMessage) {
+        console.log(this.consoleFlag + ' +----------------------------------- ');
+        console.log(this.consoleFlag + ' | Exception ');
+        console.log(this.consoleFlag + ' +----------------------------------- ');
+
+        if (tunnelMessage.hasOwnProperty('CODE') && tunnelMessage.CODE != null) {
+            console.log(this.consoleFlag + ' | Code: ' + tunnelMessage.CODE);
+        }
+
+        console.log(this.consoleFlag + ' | Message: ' + tunnelMessage.MESSAGE);
+        console.log(this.consoleFlag + ' +----------------------------------- ');
+    },
+    closeRequestWithException: function(e) {
+
+        this.treatException(e);
+        /**
+         * {TunnelRequestMiddleware}
+         */
+        if (this.server) {
+            var middleware = this.server.getBrokeRequest();
+            middleware.getErrorPage(middleware.response, e);
+        }
+    },
+    /**
+     * Reestart the Tunnel Instance
+     * @param express
+     * @param error
+     */
+    restart: function (express, error) {
+
+        /**
+         * Increese the counter
+         */
+        this.rebootCount++;
+
+        /**
+         * Log
+         */
+        console.log(this.consoleFlag + 'Reloading Tunnel...');
+        console.log(this.consoleFlag + 'Reload Count: '+ this.rebootCount);
+
+        /**
+         * Close the request
+         */
+        this.closeRequestWithException(error);
+
+        if (this.server) {
+            /**
+             * Free the port of the server
+             */
+            this.server.stopListen();
+        }
+
+        /**
+         * Destroy the internal server instance
+         */
+        this.killTunnelServerInstance();
+
+        /**
+         * Control the reboot action
+         */
+        if (this.rebootCount < this.rebootLimit) {
+            /**
+             * Run again
+             */
+            this.run(express);
+        } else {
+            this.exit(this.parseException(error));
+        }
+
+    },
+    /**
+     * Destroy the internal server instance
+     */
+    killTunnelServerInstance: function() {
+        this.server = null;
+    },
+    /**
+     * Create a TunnelServer and apply to this.server
+     * @param express
+     */
+    createTunnelServerInstance: function (express) {
+        /**
+         * Because the requires, cant be in head of script
+         */
+        var TunnelServer = require('./TunnelServer');
+
+        this.server = TunnelServer;
+        this.server.init(express);
+        this.server.run();
     }
 };
 

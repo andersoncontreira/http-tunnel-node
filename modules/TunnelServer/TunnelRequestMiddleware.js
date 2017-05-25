@@ -15,6 +15,7 @@ var TunnelRequestMiddleware = {
         'accept-encoding'
     ],
     request: null,
+    response: null,
     lastRequest: null,
     requestObject: null,
     lastRequestObject: null,
@@ -145,7 +146,40 @@ var TunnelRequestMiddleware = {
 
         return request;
     },
+    checkIfIsFile: function (request) {
+
+        var file = this.getFile(request);
+
+        return (file != null);
+    },
+    getFile: function(request) {
+        if (request.url[0] == '/') {
+            var requestedUrl = request.url.slice(1, request.length);
+        } else {
+            var requestedUrl = request.url;
+        }
+
+        var requestObject = TunnelRequestMiddleware.parseUrl(requestedUrl);
+
+        var pathname  = requestObject.pathname;
+        var file = null;
+
+        try {
+            file = fs.readFileSync(path.join(__dirname, '../../public', pathname));
+        } catch (error) {
+            Tunnel.treatException(error);
+        }
+
+        return file;
+    },
     process: function (request, response) {
+
+
+        if (this.checkIfIsFile(request)) {
+
+            response.end(this.getFile(request));
+
+        }
 
         console.log('------------------------------------ ');
         console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.process(request, response)');
@@ -154,6 +188,7 @@ var TunnelRequestMiddleware = {
         console.log('------------------------------------ ');
 
         this.request = request;
+        this.response = response;
 
         this.logRequest('Original Request:', request);
 
@@ -200,8 +235,11 @@ var TunnelRequestMiddleware = {
 
         this.logRequest('Parsed Request:', requestObject);
 
-
-        this.executeHttpRequest(requestObject, response);
+        try {
+            this.executeHttpRequest(requestObject, response);
+        } catch (e) {
+            Tunnel.treatException(e);
+        }
 
     },
 
@@ -210,7 +248,11 @@ var TunnelRequestMiddleware = {
         TunnelHttpRequestor.configs = Tunnel.configs;
         TunnelHttpRequestor.execute(requestObject, response, this.responseCallback);
     },
-
+    /**
+     * Show The error Page
+     * @param response
+     * @param error
+     */
     getErrorPage: function (response, error) {
         var errorPage = fs.readFileSync(path.join(__dirname, '../../public', 'error.html'));
 
@@ -260,6 +302,12 @@ var TunnelRequestMiddleware = {
      * @param ServerResponse response
      */
     responseCallback: function (error, result, response) {
+        /**
+         * Sobreescreve a response
+         */
+        this.response = response;
+
+
         console.log('----------------------------------- ');
         console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.responseCallback(error, result, response)');
         console.log('----------------------------------- ');

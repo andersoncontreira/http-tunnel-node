@@ -49,16 +49,19 @@ var TunnelHttpRequestor = {
         console.log(options);
         console.log('------------------------------------ ');
 
+        try {
+            request(options, function (error, requestResponse) {
 
-        request(options, function (error, requestResponse) {
+                if (error) {
+                    callback(error, null, response);
+                } else {
+                    callback(null, requestResponse, response);
+                }
 
-            if (error) {
-                callback(error, null, response);
-            } else {
-                callback(null, requestResponse, response);
-            }
-
-        });
+            });
+        } catch (error) {
+            callback(error, null, response);
+        }
     }
 };
 
