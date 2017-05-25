@@ -7,16 +7,6 @@ var TunnelConfigs = require('./config/tunnel.configs');
 var TunnelErrors = require('./Tunnel/TunnelErrors');
 var TunnelMessage = require('./Tunnel/TunnelMessage');
 
-try {
-    const uuidV1 = require('uuid/v1');
-} catch (e) {
-    //Tunnel.exit(TunnelErrors.INSTANCE.MODULES_NOT_FOUND);
-    console.log(TunnelConfigs.consoleFlag + 'Message: ' + TunnelErrors.INTIALIZE.MESSAGE);
-    process.exit(TunnelErrors.INTIALIZE.CODE);
-}
-
-
-
 
 var Tunnel = {
     /**
@@ -94,7 +84,8 @@ var Tunnel = {
         }
     },
     createSessionUUID: function () {
-        this.sessionUUID = uuidV1();
+        var uuid = require('uuid');
+        this.sessionUUID = uuid.v4();
     },
     /**
      * Run the Tunnel Process
@@ -237,6 +228,8 @@ var Tunnel = {
         this.server = TunnelServer;
         this.server.init(express);
         this.server.run();
+
+
     }
 };
 

@@ -22,7 +22,6 @@ try {
  * @type {string}
  */
 try {
-
     /**
      * Parse the command line arguments
      * @see http://localhost:3456/

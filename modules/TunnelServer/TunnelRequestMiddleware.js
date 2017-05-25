@@ -181,11 +181,13 @@ var TunnelRequestMiddleware = {
 
         }
 
-        console.log('------------------------------------ ');
-        console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.process(request, response)');
-        console.log('------------------------------------ ');
-        console.log('REQUEST BEGIN ');
-        console.log('------------------------------------ ');
+        //if (Tunnel.configs.debug) {
+            console.log('------------------------------------ ');
+            console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.process(request, response)');
+            console.log('------------------------------------ ');
+            console.log('REQUEST BEGIN ');
+            console.log('------------------------------------ ');
+        //}
 
         this.request = request;
         this.response = response;
@@ -239,6 +241,7 @@ var TunnelRequestMiddleware = {
             this.executeHttpRequest(requestObject, response);
         } catch (e) {
             Tunnel.treatException(e);
+            this.getErrorPage(response, e);
         }
 
     },
