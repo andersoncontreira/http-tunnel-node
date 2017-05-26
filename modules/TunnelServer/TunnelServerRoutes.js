@@ -10,15 +10,23 @@ var mustache = require('mustache');
  * @type {{applyRoutes: TunnelServerRoutes.applyRoutes, getRequestMiddleware: TunnelServerRoutes.getRequestMiddleware}}
  */
 var TunnelServerRoutes = {
+    request: null,
+    beforeRequest : function (request, response) {
+        this.request = request;
 
+    },
+    afterRequest : function (request, response) {
+        //console.log('after request');
+    },
     applyRoutes: function (app) {
+
 
         /**
          * Middleware called before all request
          */
         app.use(function (request, response, next) {
 
-            console.log('Do the log call here');
+            TunnelServerRoutes.beforeRequest(request,response);
 
             next();
         });
@@ -49,12 +57,17 @@ var TunnelServerRoutes = {
             /**
              * Não chama o next() porque está é a ultima etapa
              */
+            TunnelServerRoutes.afterRequest(request, response);
         });
     },
 
     getRequestMiddleware: function () {
         return TunnelRequestMiddleware;
+    },
+    getLastRequest: function() {
+        return this.request;
     }
+
 };
 
 module.exports = TunnelServerRoutes;

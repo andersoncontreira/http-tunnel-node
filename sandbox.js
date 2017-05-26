@@ -1,7 +1,6 @@
 var TunnelLogger = require('./modules/TunnelLogger');
+var TunnelLoggerProcessor = require('./modules/TunnelLogger/TunnelLoggerProcessor');
+var TunnelLoggerLogLevels = require('./modules/TunnelLogger/TunnelLoggerLogLevels');
 
-TunnelLogger.error('some error');
-TunnelLogger.info('some info');
-TunnelLogger.warning('some warning');
+//TunnelLogger.info('Messagem de erro qualquer', 10);
 
-console.log(TunnelLogger);

@@ -41,9 +41,35 @@ try {
  * Hotfix - TypeError was terminating the process
  */
 process.on('uncaughtException', function (error) {
+    console.log('uncaughtException');
     /**
      * If crash, restart the tunnel
      */
-    Tunnel.restart(express, error);
+    try {
+        Tunnel.restart(express, error);
+    } catch (e) {
+        console.log(e.trace);
+        //Tunnel.exit(e.message);
+    }
+    console.log(error);
 
+
+});
+
+process.on('fatalException', function (error) {
+    console.log('fatalException');
+    /**
+     * If crash, restart the tunnel
+     */
+    try {
+        Tunnel.restart(express, error);
+    } catch (e) {
+        Tunnel.exit(e.message);
+    }
+
+});
+
+
+process.on('exit', function () {
+   console.log('Exiting...');
 });

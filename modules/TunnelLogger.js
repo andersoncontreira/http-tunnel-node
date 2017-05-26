@@ -1,31 +1,18 @@
-var TunnelLoggerConfigs = require('./config/TunnelLoggerConfigs');
+var TunnelLoggerLogLevels = require('./TunnelLogger/TunnelLoggerLogLevels');
 var TunnelLoggerManager = require('./TunnelLogger/TunnelLoggerManager');
 
-function TunnelLogger(TunnelLoggerConfigs) {
+var TunnelLogger = {
+    logManager: TunnelLoggerManager.initialize(),
 
-    this.logManager = TunnelLoggerManager;
+    info: function (message) {
+        this.logManager.writeLog(TunnelLoggerLogLevels.INFO, message);
+    },
+    error: function (message, code, exception) {
+        this.logManager.writeLog(TunnelLoggerLogLevels.ERROR, message, code, exception);
+    },
+    warn: function (message, code) {
+        this.logManager.writeLog(TunnelLoggerLogLevels.WARNING, message, code ,exception);
+    }
+};
 
-    var logName = TunnelLoggerConfigs.logName;
-    /**
-     * moment js
-     */
-    // var dateStr = moment.format(TunnelLoggerConfigs.logDateFormat);
-    // var fileName = logName + dateStr;
-
-
-    this.logFileName = '/logs/tunnel.log';
-
-    this.error = function (msg) {
-
-    };
-    this.info = function (msg) {
-
-    };
-    this.warning = function (msg) {
-
-    };
-
-
-}
-
-module.exports = new TunnelLogger(TunnelLoggerConfigs);
+module.exports = TunnelLogger;

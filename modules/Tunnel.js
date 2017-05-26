@@ -6,6 +6,7 @@ var packageJson = require('../package.json');
 var TunnelConfigs = require('./config/tunnel.configs');
 var TunnelErrors = require('./Tunnel/TunnelErrors');
 var TunnelMessage = require('./Tunnel/TunnelMessage');
+var TunnelLogger = require('./TunnelLogger');
 
 
 var Tunnel = {
@@ -123,7 +124,7 @@ var Tunnel = {
      * @returns {TunnelMessage}
      */
     parseException: function (e) {
-        return new TunnelMessage(e.code, e.message);
+        return new TunnelMessage(e.code, e.message, e);
     },
     /**
      *
@@ -149,6 +150,9 @@ var Tunnel = {
 
         console.log(this.consoleFlag + ' | Message: ' + tunnelMessage.MESSAGE);
         console.log(this.consoleFlag + ' +----------------------------------- ');
+
+        TunnelLogger.error(tunnelMessage.MESSAGE, tunnelMessage.ERROR, tunnelMessage.EXCEPTION);
+
     },
     closeRequestWithException: function(e) {
 

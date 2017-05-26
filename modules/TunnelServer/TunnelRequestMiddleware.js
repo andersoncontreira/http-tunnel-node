@@ -2,6 +2,7 @@ var Tunnel = require('./../Tunnel');
 var DefaulRequest = require('../DefaultRequest');
 var TunnelHttpRequestor = require('./TunnelHttpRequestor');
 var TunnelMessage = require('./../Tunnel/TunnelMessage');
+var TunnelLogger = require('../TunnelLogger');
 
 var url = require("url");
 var fs = require("fs");
@@ -44,10 +45,10 @@ var TunnelRequestMiddleware = {
 
             if (request.headers['referer'].match('localhost')) {
                 var referer = request.headers['referer'];
-                request.headers['referer'] = referer.replace('http://localhost:'+Tunnel.configs.httpPort+'/','');
+                request.headers['referer'] = referer.replace('http://localhost:' + Tunnel.configs.httpPort + '/', '');
             } else if (request.headers['referer'].match('tunnel.rentcars')) {
                 var referer = request.headers['referer'];
-                request.headers['referer'] = referer.replace('http://tunnel.rentcars.lan:'+Tunnel.configs.httpPort+'/','');
+                request.headers['referer'] = referer.replace('http://tunnel.rentcars.lan:' + Tunnel.configs.httpPort + '/', '');
             }
         }
 
@@ -98,16 +99,16 @@ var TunnelRequestMiddleware = {
             console.log('------------------------------------ ');
             console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.applyParentProperties(request)');
             console.log('------------------------------------ ');
-            console.log('lastUrl',lastUrl);
-            console.log('request.url',request.url);
-            console.log('lastRequestObject',lastRequestObject);
-            console.log('currentRequestObject',currentRequestObject);
-            console.log('request.headers.referer',request.headers.referer);
-            console.log('lastRequest.headers.referer',TunnelRequestMiddleware.lastRequest.headers.referer);
+            console.log('lastUrl', lastUrl);
+            console.log('request.url', request.url);
+            console.log('lastRequestObject', lastRequestObject);
+            console.log('currentRequestObject', currentRequestObject);
+            console.log('request.headers.referer', request.headers.referer);
+            console.log('lastRequest.headers.referer', TunnelRequestMiddleware.lastRequest.headers.referer);
             console.log('------------------------------------ ');
 
             /**
-             * TODO não funciona bem para navegação cruzada, aonde temos várias abas abertas,
+             * Não funciona bem para navegação cruzada, aonde temos várias abas abertas,
              * A classe perde a referência do pai
              */
             /**
@@ -117,9 +118,9 @@ var TunnelRequestMiddleware = {
             if (currentRequestObject.host == null) {
 
                 if (request.url[0] == '/') {
-                    request.url = lastRequestObject.protocol + '//'+lastRequestObject.host + request.url;
+                    request.url = lastRequestObject.protocol + '//' + lastRequestObject.host + request.url;
                 } else {
-                    request.url = lastRequestObject.protocol + '//'+lastRequestObject.host + '/' + request.url;
+                    request.url = lastRequestObject.protocol + '//' + lastRequestObject.host + '/' + request.url;
                 }
 
             }
@@ -152,7 +153,7 @@ var TunnelRequestMiddleware = {
 
         return (file != null);
     },
-    getFile: function(request) {
+    getFile: function (request) {
         if (request.url[0] == '/') {
             var requestedUrl = request.url.slice(1, request.length);
         } else {
@@ -161,13 +162,16 @@ var TunnelRequestMiddleware = {
 
         var requestObject = TunnelRequestMiddleware.parseUrl(requestedUrl);
 
-        var pathname  = requestObject.pathname;
+        var pathname = requestObject.pathname;
         var file = null;
 
         try {
             file = fs.readFileSync(path.join(__dirname, '../../public', pathname));
         } catch (error) {
-            Tunnel.treatException(error);
+            /**
+             * Não é necessário tratar essa exception, pois apenas testa se o arquivo existe
+             */
+            //Tunnel.treatException(error);
         }
 
         return file;
@@ -176,17 +180,15 @@ var TunnelRequestMiddleware = {
 
 
         if (this.checkIfIsFile(request)) {
-
             response.end(this.getFile(request));
-
         }
 
         //if (Tunnel.configs.debug) {
-            console.log('------------------------------------ ');
-            console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.process(request, response)');
-            console.log('------------------------------------ ');
-            console.log('REQUEST BEGIN ');
-            console.log('------------------------------------ ');
+        console.log('------------------------------------ ');
+        console.log(Tunnel.consoleFlag + ' Call: TunnelRequestMiddleware.process(request, response)');
+        console.log('------------------------------------ ');
+        console.log('REQUEST BEGIN ');
+        console.log('------------------------------------ ');
         //}
 
         this.request = request;
@@ -226,7 +228,6 @@ var TunnelRequestMiddleware = {
         var body = request.body;
 
 
-
         var requestObject = new DefaulRequest();
         requestObject.setRequestedUrl(requestedUrl);
         requestObject.setMethod(method);
@@ -239,6 +240,7 @@ var TunnelRequestMiddleware = {
 
         try {
             this.executeHttpRequest(requestObject, response);
+            //throw new Error('Deu alguma zica Aqui');
         } catch (e) {
             Tunnel.treatException(e);
             this.getErrorPage(response, e);
@@ -270,24 +272,25 @@ var TunnelRequestMiddleware = {
      * @param Object headers
      */
     overrideHeaders: function (response, headers) {
-        for (var key in headers) {
+        try {
+            for (var key in headers) {
+                /**
+                 * Debug
+                 */
+                if (Tunnel.configs.debug) {
+                    console.log('DEBUG');
+                    console.log('key:', key);
+                    console.log('response value:', response.getHeader(key));
+                    console.log('output headers value:', headers[key]);
+                    console.log('');
+                }
 
-            /**
-             * Debug
-             */
-            if (Tunnel.configs.debug) {
-                console.log('DEBUG');
-                console.log('key:', key);
-                console.log('response value:', response.getHeader(key));
-                console.log('output headers value:', headers[key]);
-                console.log('');
+                if (!response.getHeader(key)) {
+                    response.setHeader(key, headers[key]);
+                }
             }
-
-            if (!response.getHeader(key)) {
-                response.setHeader(key, headers[key]);
-            }
-
-
+        } catch (e) {
+            Tunnel.treatException(e);
         }
     },
     /**
@@ -356,6 +359,8 @@ var TunnelRequestMiddleware = {
 
                 response.body = body;
                 response.end(body);
+
+
             } else {
                 //Tratar errors específicos aqui
                 response.end('Verificar tivemos problemas');
