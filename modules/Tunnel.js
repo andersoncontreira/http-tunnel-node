@@ -8,6 +8,7 @@ var TunnelErrors = require('./Tunnel/TunnelErrors');
 var TunnelMessage = require('./Tunnel/TunnelMessage');
 var TunnelLogger = require('./TunnelLogger');
 
+//TODO: FAZER DOWNLOAD DOS LOGS OU ABRIR NO NAVEGADOR
 
 var Tunnel = {
     /**

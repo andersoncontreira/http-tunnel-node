@@ -3,6 +3,7 @@ var TunnelRequestMiddleware = require("./TunnelRequestMiddleware");
 var fs = require('fs');
 var path = require('path');
 var mustache = require('mustache');
+var TunnelLogger = require('../TunnelLogger');
 
 /**
  * Class TunnelServerRoutes
@@ -11,11 +12,11 @@ var mustache = require('mustache');
  */
 var TunnelServerRoutes = {
     request: null,
-    beforeRequest : function (request, response) {
+    beforeRequest: function (request, response) {
         this.request = request;
 
     },
-    afterRequest : function (request, response) {
+    afterRequest: function (request, response) {
         //console.log('after request');
     },
     applyRoutes: function (app) {
@@ -26,16 +27,14 @@ var TunnelServerRoutes = {
          */
         app.use(function (request, response, next) {
 
-            TunnelServerRoutes.beforeRequest(request,response);
+            TunnelServerRoutes.beforeRequest(request, response);
 
             next();
         });
 
         app.get('/', function (request, response) {
             var index = fs.readFileSync(path.join(__dirname, '../../public', 'index.html'));
-
             var indexPage = mustache.render(index.toString(), Tunnel);
-
 
             response.setHeader('Content-Type', 'text/html');
             response.end(indexPage);
@@ -44,7 +43,16 @@ var TunnelServerRoutes = {
             response.send('POST / working fine!');
         });
         app.get('/log', function (request, response) {
-           response.send("logs here");
+            var logs = fs.readFileSync(path.join(__dirname, '../../public', 'logs.html'));
+            var logsPage = mustache.render(logs.toString(), TunnelLogger);
+
+            response.setHeader('Content-Type', 'text/html');
+            response.end(logsPage);
+        });
+        app.get('/log/*', function (request, response) {
+            var url = request.originalUrl.split('/');
+            var fileName = './logs/' + url[2];
+            response.download(fileName);
         });
 
 
@@ -64,7 +72,7 @@ var TunnelServerRoutes = {
     getRequestMiddleware: function () {
         return TunnelRequestMiddleware;
     },
-    getLastRequest: function() {
+    getLastRequest: function () {
         return this.request;
     }
 

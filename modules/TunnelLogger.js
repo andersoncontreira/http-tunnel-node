@@ -1,8 +1,11 @@
 var TunnelLoggerLogLevels = require('./TunnelLogger/TunnelLoggerLogLevels');
 var TunnelLoggerManager = require('./TunnelLogger/TunnelLoggerManager');
+var fs = require('fs');
 
 var TunnelLogger = {
     logManager: TunnelLoggerManager.initialize(),
+
+    logs: readLogFiles(),
 
     info: function (message) {
         this.logManager.writeLog(TunnelLoggerLogLevels.INFO, message);
@@ -14,5 +17,18 @@ var TunnelLogger = {
         this.logManager.writeLog(TunnelLoggerLogLevels.WARNING, message, code ,exception);
     }
 };
+
+function readLogFiles() {
+    var path = './logs/';
+    var files = [];
+
+    var items = fs.readdirSync(path);
+
+    items.forEach(function(item) {
+        files.push({'log' : item});
+    });
+
+    return files;
+}
 
 module.exports = TunnelLogger;
