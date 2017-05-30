@@ -1,4 +1,8 @@
-var TunnelLoggerLogLevel = {
+/**
+ * Log level enumerator
+ * @type TunnelLoggerLogLevels
+ */
+var TunnelLoggerLogLevels = {
     ALERT: 'alert',
     ERROR: 'error',
     WARNING: 'warn',
@@ -6,4 +10,4 @@ var TunnelLoggerLogLevel = {
     INFO: 'info'
 };
 
-module.exports = TunnelLoggerLogLevel;
+module.exports = TunnelLoggerLogLevels;

@@ -3,10 +3,21 @@ var TunnelLoggerConfigs = require('../config/TunnelLoggerConfigs');
 var TunnelLoggerProcessor = require('../TunnelLogger/TunnelLoggerProcessor');
 var moment = require('moment');
 
+//TODO: Extrair Build Logger para um novo arquivo
+/**
+ * Builder logger for Tunnel
+ * @param configs
+ * @constructor
+ */
 function BuildLogger(configs) {
     this.configs = this.overrideConfigs(configs);
 }
 
+/**
+ * Override default configs for TunnelLogger
+ * @param configs
+ * @return {TunnelLoggerConfigs}
+ */
 BuildLogger.prototype.overrideConfigs = function(configs) {
     var defaultConfigs = TunnelLoggerConfigs;
 
@@ -61,7 +72,10 @@ BuildLogger.prototype.getLogger = function () {
 };
 
 
-
+/**
+ * Logs manager for Tunnel
+ * @type TunnelLoggerManager
+ */
 var TunnelLoggerManager = {
     /** @var EventEmitter */
     logger: null,

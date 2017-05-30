@@ -12,18 +12,21 @@ try{
     var http = require('http');
     var url = require('url');
 
-
 } catch (error) {
     console.error(Tunnel.consoleFlag + 'Error: '+ error.message);
     console.log(Tunnel.consoleFlag + Tunnel.ERRORS.INTIALIZE.MESSAGE);
     Tunnel.exit(Tunnel.ERRORS.SERVER.MODULES_NOT_FOUND);
-
 }
 
+/**
+ * TunnelServer
+ * @type {TunnelServer}
+ */
 var TunnelServer = {
     express: null,
     app: null,
     server: null,
+
     /**
      * Initialize the TunnelServer
      * @param express
@@ -37,6 +40,10 @@ var TunnelServer = {
         }
 
     },
+
+    /**
+     * Initialize express dependency
+     */
     initializeExpress: function () {
         var app = this.express();
         //Favicon
@@ -50,10 +57,18 @@ var TunnelServer = {
 
         this.app = app;
     },
+
+    /**
+     * Manage routes
+     */
     routes: function () {
         var TunnelServerRoutes = require("./TunnelServer/TunnelServerRoutes");
         TunnelServerRoutes.applyRoutes(this.app);
     },
+
+    /**
+     * Run application
+     */
     run: function () {
 
         this.initializeExpress();
@@ -61,24 +76,28 @@ var TunnelServer = {
         this.listen();
 
     },
+
     /**
-     *
+     * Listen all http requests on defined port
      */
     listen: function () {
 
         this.server = this.app.listen(Tunnel.configs.httpPort, function () {
             console.log(Tunnel.consoleFlag + 'Server running at port:' + Tunnel.configs.httpPort);
         });
-
     },
+
     /**
-     *
+     * Stop listening the defined port
      */
     stopListen: function () {
         this.server.close();
     },
 
-    getBrokeRequest: function () {
+    /**
+     * @returns Middleware
+     */
+    getRequestMiddleware: function () {
         var TunnelServerRoutes = require("./TunnelServer/TunnelServerRoutes");
         return TunnelServerRoutes.getRequestMiddleware();
     }

@@ -1,4 +1,5 @@
-/**o
+/**
+ * Message transporter for Tunnel
  *
  * @param code
  * @param message

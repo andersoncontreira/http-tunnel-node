@@ -1,63 +1,34 @@
 /**
- * Global
- */
-Tunnel = require('./modules/Tunnel');
-/**
- * Initialization
+ * Verify if the dependencies are installed.
  */
 try {
-    Tunnel.initInfo();
+    /**
+     * Global
+     */
+    TunnelConfigs = require('./modules/config/TunnelConfigs');
+    TunnelErrors = require('./modules/Tunnel/TunnelErrors');
+    TunnelLogger = require('./modules/TunnelLogger');
+    Tunnel = require('./modules/Tunnel');
 
+    /**
+     * Main libraries
+     */
     var commander = require('commander');
     var express = require('express');
 
+    Tunnel.initInfo();
+
 } catch (error) {
-    console.error(Tunnel.consoleFlag + 'Error: ' + error.message);
-    console.log(Tunnel.consoleFlag + Tunnel.ERRORS.INTIALIZE.MESSAGE);
-    Tunnel.exit(Tunnel.ERRORS.INSTANCE.MODULES_NOT_FOUND);
+     console.error(TunnelConfigs.consoleFlag + 'Error: ' + error.message);
+     console.error(TunnelConfigs.consoleFlag + TunnelErrors.INTIALIZE.MESSAGE);
+     process.exit(TunnelConfigs.consoleFlag + TunnelErrors.INSTANCE.MODULES_NOT_FOUND);
 }
 
 /**
- * Main
- * @type {string}
+ * This method restart the application
+ * @param Error error
  */
-try {
-    /**
-     * Parse the command line arguments
-     * @see http://localhost:3456/
-     */
-    Tunnel.init(commander);
-    Tunnel.run(express);
-
-} catch (error) {
-    /**
-     * If crash, restart the tunnel
-     */
-    Tunnel.restart(express, error);
-
-}
-
-/**
- * Hotfix - TypeError was terminating the process
- */
-process.on('uncaughtException', function (error) {
-    console.log('uncaughtException');
-    /**
-     * If crash, restart the tunnel
-     */
-    try {
-        Tunnel.restart(express, error);
-    } catch (e) {
-        console.log(e.trace);
-        //Tunnel.exit(e.message);
-    }
-    console.log(error);
-
-
-});
-
-process.on('fatalException', function (error) {
-    console.log('fatalException');
+function tunnelRestart(error) {
     /**
      * If crash, restart the tunnel
      */
@@ -66,10 +37,31 @@ process.on('fatalException', function (error) {
     } catch (e) {
         Tunnel.exit(e.message);
     }
+}
 
+/**
+ * Main - Start the application
+ */
+try {
+    /**
+     * Parse the command line arguments
+     * @see http://localhost:3456/
+     */
+    Tunnel.init(commander);
+    Tunnel.run(express);
+} catch (error) {
+    tunnelRestart(error);
+}
+
+/**
+ * Try to restart the application
+ */
+process.on('uncaughtException', function (error) {
+    tunnelRestart(error);
 });
-
-
-process.on('exit', function () {
-   console.log('Exiting...');
+/**
+ * Try to restart the application
+ */
+process.on('fatalException', function(error){
+    tunnelRestart(error);
 });

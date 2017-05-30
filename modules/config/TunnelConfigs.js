@@ -1,3 +1,7 @@
+/**
+ * Default Tunnel configs
+ * @type TunnelConfigs
+ */
 var TunnelConfigs = {
     consoleFlag: 'tunnel -> ',
     httpPort: 3456,

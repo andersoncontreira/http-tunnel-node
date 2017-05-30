@@ -48,9 +48,10 @@
 
     <div>
         <ul>
-            {{#logs}}
+            {{#readLogFiles}}
             <li><a href="/log/{{log}}">{{log}}</a></li>
-            {{/logs}}
+            {{/readLogFiles}}
+            {{^readLogFiles}}There aren't logs files.{{/readLogFiles}}
         </ul>
     </div>
 
