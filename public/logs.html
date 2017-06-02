@@ -32,8 +32,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/log">Log</a></li>
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/log">Log</a></li>
                 <li><a href="#about">Stats</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
@@ -42,29 +42,25 @@
     </div>
 </nav>
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <div class="container">
-        <h1>Welcome to {{name}}</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-    </div>
-</div>
-
 <div class="container">
 
-    ver: http://getbootstrap.com/examples/starter-template/
+    <h4>Logs:</h4>
+
+    <div>
+        <ul>
+            {{#readLogFiles}}
+            <li><a href="/log/{{log}}">{{log}}</a></li>
+            {{/readLogFiles}}
+            {{^readLogFiles}}There aren't logs files.{{/readLogFiles}}
+        </ul>
+    </div>
 
 
-    <p></p>
-    <p>You can use with Socks5</p>
-    Terminar depois essa parada<br/>
-    incluir instruções de uso
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 </div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

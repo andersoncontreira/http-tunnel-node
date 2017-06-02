@@ -1,5 +1,5 @@
 var TunnelErrors = require('./Tunnel/TunnelErrors');
-var Tunnel = require('./Tunnel');
+var Tunnel = require("./Tunnel.js");
 
 /**
  * Initialization
@@ -12,17 +12,25 @@ try{
     var http = require('http');
     var url = require('url');
 
-
-} catch (e) {
-    console.error(Tunnel.consoleFlag + 'Error: '+ e.message);
+} catch (error) {
+    console.error(Tunnel.consoleFlag + 'Error: '+ error.message);
     console.log(Tunnel.consoleFlag + Tunnel.ERRORS.INTIALIZE.MESSAGE);
     Tunnel.exit(Tunnel.ERRORS.SERVER.MODULES_NOT_FOUND);
-
 }
 
+/**
+ * TunnelServer
+ * @type {TunnelServer}
+ */
 var TunnelServer = {
     express: null,
     app: null,
+    server: null,
+
+    /**
+     * Initialize the TunnelServer
+     * @param express
+     */
     init: function (express) {
 
         if (express != null && typeof express === 'function') {
@@ -32,6 +40,10 @@ var TunnelServer = {
         }
 
     },
+
+    /**
+     * Initialize express dependency
+     */
     initializeExpress: function () {
         var app = this.express();
         //Favicon
@@ -45,19 +57,49 @@ var TunnelServer = {
 
         this.app = app;
     },
+
+    /**
+     * Manage routes
+     */
     routes: function () {
         var TunnelServerRoutes = require("./TunnelServer/TunnelServerRoutes");
         TunnelServerRoutes.applyRoutes(this.app);
     },
+
+    /**
+     * Run application
+     */
     run: function () {
 
         this.initializeExpress();
         this.routes();
+        this.listen();
 
-        this.app.listen(Tunnel.configs.httpPort, this.listen);
     },
+
+    /**
+     * Listen all http requests on defined port
+     */
     listen: function () {
-        console.log(Tunnel.consoleFlag + 'Server running at port:' + Tunnel.configs.httpPort);
+
+        this.server = this.app.listen(Tunnel.configs.httpPort, function () {
+            console.log(Tunnel.consoleFlag + 'Server running at port:' + Tunnel.configs.httpPort);
+        });
+    },
+
+    /**
+     * Stop listening the defined port
+     */
+    stopListen: function () {
+        this.server.close();
+    },
+
+    /**
+     * @returns Middleware
+     */
+    getRequestMiddleware: function () {
+        var TunnelServerRoutes = require("./TunnelServer/TunnelServerRoutes");
+        return TunnelServerRoutes.getRequestMiddleware();
     }
 };
 

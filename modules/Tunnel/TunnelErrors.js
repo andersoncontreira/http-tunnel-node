@@ -1,3 +1,7 @@
+/**
+ * Errors enumerator
+ * @type TunnelErrors
+ */
 var TunnelErrors = {
     INTIALIZE: {
         CODE: 99,
@@ -29,6 +33,10 @@ var TunnelErrors = {
         REQUIRED_EXPRESS_MODULE: {
             CODE: 11,
             MESSAGE: 'Express module is required!'
+        },
+        RESPONSE_BODY_UNDEFINED: {
+            CODE: 13,
+            MESSAGE: 'Request body undefined!'
         }
     }
 

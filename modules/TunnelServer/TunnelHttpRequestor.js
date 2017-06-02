@@ -1,13 +1,23 @@
-var TunnelDefaultConfigs = require('./../config/tunnel.configs');
+var TunnelDefaultConfigs = require('./../config/TunnelConfigs');
 
 var request = require('request');
 var Agent = require('socks5-http-client/lib/Agent');
 var HttpsAgent = require('socks5-https-client/lib/Agent');
 
+/**
+ * Perform a request, supports: http, https, proxy request.
+ * @type {TunnelHttpRequestor}
+ */
 var TunnelHttpRequestor = {
     consoleFlag: TunnelDefaultConfigs.consoleFlag,
     configs: TunnelDefaultConfigs,
 
+    /**
+     * Perform a request and return a callback
+     * @param requestObject
+     * @param response
+     * @param callback
+     */
     execute: function (requestObject, response, callback) {
         /**
          * Socks5 Agents
@@ -21,7 +31,7 @@ var TunnelHttpRequestor = {
         }
 
         /**
-         * Opções de requisição
+         * Request options
          */
         var options = {
             method: requestObject.getMethod(),
@@ -41,25 +51,23 @@ var TunnelHttpRequestor = {
             options['headers'] = requestObject.getHeaders();
         }
 
-        console.log('------------------------------------ ');
-        console.log(this.consoleFlag + ' Call: TunnelHttpRequestor.execute(requestObject, response, callback)');
-        console.log('------------------------------------ ');
-        console.log('| Request Options:');
-        console.log('------------------------------------ ');
-        console.log(options);
-        console.log('------------------------------------ ');
+        TunnelLogger.info(options);
 
+        try {
+            request(options, function (error, requestResponse) {
 
-        request(options, function (error, requestResponse) {
+                if (error) {
+                    callback(error, null, response);
+                } else {
+                    callback(null, requestResponse, response);
+                }
 
-            if (error) {
-                callback(error, null, response);
-            } else {
-                callback(null, requestResponse, response);
-            }
-
-        });
+            });
+        } catch (error) {
+            callback(error, null, response);
+        }
     }
 };
+
 
 module.exports = TunnelHttpRequestor;

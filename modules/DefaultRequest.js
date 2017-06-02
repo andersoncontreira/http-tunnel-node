@@ -1,3 +1,8 @@
+//TODO: Mover para pasta Tunnel
+/**
+ * This is a value object for Tunnel Requests
+ * @constructor
+ */
 function DefaultRequest() {
 
     this.method = 'GET';
