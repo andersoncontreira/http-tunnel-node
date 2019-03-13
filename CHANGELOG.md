@@ -1,4 +1,4 @@
-# Financial Gateway Push Notification - Changelog
+# Socks5 Tunnel - Changelog
 
 ## 1.8.0
 Bootstrap security problem are solved.
