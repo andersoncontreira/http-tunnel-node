@@ -1,12 +1,12 @@
-# Socks5 Tunnel 
+# HTTP Tunnel 
 This project provide an HTTP tunnel connection.
 The project contains an serve:r that can receive HTTP connections and delivery to the target desired, but with IP from the current
 host (Whitelist host).
 
 <!-- badges -->
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](LICENSE) 
-[![Build Status](https://travis-ci.org/andersoncontreira/socks5-tunnel-node.svg?branch=master)](https://travis-ci.org/andersoncontreira/socks5-tunnel-node)
-[![codecov](https://codecov.io/gh/andersoncontreira/socks5-tunnel-node/branch/master/graph/badge.svg)](https://codecov.io/gh/andersoncontreira/socks5-tunnel-node)
+[![Build Status](https://travis-ci.org/andersoncontreira/http-tunnel-node.svg?branch=master)](https://travis-ci.org/andersoncontreira/http-tunnel-node)
+[![codecov](https://codecov.io/gh/andersoncontreira/http-tunnel-node/branch/master/graph/badge.svg)](https://codecov.io/gh/andersoncontreira/http-tunnel-node)
 <!-- -->
 
 ## Purpose
@@ -44,8 +44,8 @@ All the changes must be tracked in [CHANGELOG.md](CHANGELOG.md)
 
 ### Production:
 * express: ~4.14.1
-* socks5-http-client: 1.0.2
-* socks5-https-client: 1.2.0
+* http-http-client: 1.0.2
+* http-https-client: 1.2.0
 * forever-monitor: 1.7.1
 * bootstrap: >=3.4.1
 * moment: ^2.18.1

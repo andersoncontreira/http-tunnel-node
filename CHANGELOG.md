@@ -1,4 +1,4 @@
-# Socks5 Tunnel - Changelog
+# HTTP Tunnel - Changelog
 
 ## 1.8.0
 Bootstrap security problem are solved.
