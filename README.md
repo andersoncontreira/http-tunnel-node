@@ -1,6 +1,6 @@
 # Socks5 Tunnel 
 This project provide an HTTP tunnel connection.
-The project contains an server that can receive http connections and delivery to the target desired, but with IP from the current
+The project contains an serve:r that can receive HTTP connections and delivery to the target desired, but with IP from the current
 host (Whitelist host).
 
 <!-- badges -->
@@ -36,7 +36,7 @@ The last version 3.3.7 are changed to the version (>=3.4.1):
 
 Initial version of the project
 
-All the changes must be tracked in [CHANGELOG.md][CHANGELOG.md]
+All the changes must be tracked in [CHANGELOG.md](CHANGELOG.md)
 
 ## Prerequisites
 * node: 6.10+
