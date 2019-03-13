@@ -6,10 +6,10 @@
  * @param Error exception
  * @constructor
  */
-function TunnelMessage(code, message, exception){
-    this.CODE = code;
-    this.MESSAGE = message;
-    this.EXCEPTION = exception;
+function TunnelMessage (code, message, exception) {
+  this.CODE = code
+  this.MESSAGE = message
+  this.EXCEPTION = exception
 }
 
-module.exports = TunnelMessage;
+module.exports = TunnelMessage

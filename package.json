@@ -6,6 +6,9 @@
   "main": "tunnel.js",
   "scripts": {
     "start": "node ./tunnel.js",
+    "test": "mocha tests/**/**/*.js",
+    "test-standard": "standard && node index.js && exit",
+    "fix-standard": "standard --fix && node tunnel.js && exit",
     "postinstall": "rm -Rf ./public/bootstrap/ && mkdir ./public/bootstrap/ && cp -r ./node_modules/bootstrap/dist ./public/bootstrap/dist"
   },
   "author": "Anderson de Oliveira Contreira",
@@ -31,7 +34,8 @@
     "uuid": "^3.0.1",
     "bootstrap": ">=3.4.1",
     "winston": "^2.3.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "standard": "^10.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",

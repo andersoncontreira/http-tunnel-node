@@ -1,15 +1,15 @@
-var url  = require('url');
+var url = require('url')
 
 /**
  * get StackTrace for an exception or create one
  * @param exception
  * @return {*}
  */
-function stackTrace(exception) {
-    if (exception == undefined || exception == null) {
-        exception = new Error();
-    }
-    return exception.stack;
+function stackTrace (exception) {
+  if (exception == undefined || exception == null) {
+    exception = new Error()
+  }
+  return exception.stack
 }
 
 /**
@@ -18,15 +18,15 @@ function stackTrace(exception) {
  */
 var TunnelLoggerProcessor = {
 
-    configs: null,
+  configs: null,
 
     /**
      * Set initial configs from log manager
      * @param configs
      */
-    initialize: function (configs) {
-        this.configs = configs;
-    },
+  initialize: function (configs) {
+    this.configs = configs
+  },
 
     /**
      * Create a log record from params
@@ -36,18 +36,18 @@ var TunnelLoggerProcessor = {
      * @param exception
      * @return {{channel: string, level: *, message: *, code: *, trace: *}}
      */
-    execute: function (level, message, code, exception) {
-        //TODO: Converter em uma VO (Value Object)
-        var record = {
-            channel: this.configs.logName,
-            level: level,
-            message: message,
-            code: code,
-            trace: stackTrace(exception)
-        };
-
-        return record;
+  execute: function (level, message, code, exception) {
+        // TODO: Converter em uma VO (Value Object)
+    var record = {
+      channel: this.configs.logName,
+      level: level,
+      message: message,
+      code: code,
+      trace: stackTrace(exception)
     }
-};
 
-module.exports = TunnelLoggerProcessor;
+    return record
+  }
+}
+
+module.exports = TunnelLoggerProcessor

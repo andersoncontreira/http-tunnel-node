@@ -91,6 +91,24 @@ To run the unit tests of the project you can execute the follow command:
 ``` 
 npm test
 ```
+### Usage
+
+Open the browser of your preference and go to [localhost:3456](http://localhost:3456).
+
+After this you can copy the URL that you want access for example:
+* https://www.w3schools.com/howto/
+
+Try it: 
+```
+http://localhost:3456/https://www.w3schools.com/howto/
+```
+
+The result is web page of `https://www.w3schools.com/howto/`, but passing by the HTTP tunnel.
+
+With this information you can try the access to the host that require IP whitelist, but for this work this server need be 
+running in your whitelist server. 
+
+
 <!--
 ## Docs and references
    * [Docs] (https://github.com/Rentcars)
@@ -99,6 +117,11 @@ npm test
 -->
 ## License
 Code released under the [LICENSE](LICENSE)  
+
+## Contributors
+
+* Anderson de Oliveira Contreira [andersoncontreira](https://github.com/andersoncontreira)
+* Allysson Matheus dos Santos [allyssonm](https://github.com/allyssonm)
 
 ## Contributions 
  Pull requests and new issues are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for details. 

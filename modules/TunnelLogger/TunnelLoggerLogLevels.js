@@ -3,11 +3,11 @@
  * @type TunnelLoggerLogLevels
  */
 var TunnelLoggerLogLevels = {
-    ALERT: 'alert',
-    ERROR: 'error',
-    WARNING: 'warn',
-    NOTICE: 'notice',
-    INFO: 'info'
-};
+  ALERT: 'alert',
+  ERROR: 'error',
+  WARNING: 'warn',
+  NOTICE: 'notice',
+  INFO: 'info'
+}
 
-module.exports = TunnelLoggerLogLevels;
+module.exports = TunnelLoggerLogLevels
