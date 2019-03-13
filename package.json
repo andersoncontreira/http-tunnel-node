@@ -9,6 +9,8 @@
     "test": "mocha tests/**/**/*.js",
     "test-standard": "standard && node index.js && exit",
     "fix-standard": "standard --fix && node tunnel.js && exit",
+    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha tests/**/**/*.js && codecov -F istanbul_mocha",
+    "test-coverage-travis": "istanbul cover ./node_modules/mocha/bin/_mocha tests/**/**/*.js --report lcovonly -- -R spec && codecov",
     "postinstall": "rm -Rf ./public/bootstrap/ && mkdir ./public/bootstrap/ && cp -r ./node_modules/bootstrap/dist ./public/bootstrap/dist"
   },
   "author": "Anderson de Oliveira Contreira",
@@ -39,6 +41,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.3.1"
+    "mocha": "^2.3.1",
+    "istanbul": "^0.4.5",
+    "codecov": "^3.1.0"
   }
 }
