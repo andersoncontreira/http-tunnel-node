@@ -36,7 +36,7 @@ The last version 3.3.7 are changed to the version (>=3.4.1):
 
 Initial version of the project
 
-All the changes must be tracked in [CHANGELOG.md][CHANGELOG.md]
+All the changes must be tracked in [CHANGELOG.md](CHANGELOG.md)
 
 ## Prerequisites
 * node: 6.10+
