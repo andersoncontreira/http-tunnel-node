@@ -1,11 +1,22 @@
 {
-  "name": "node-tunnel-socks5",
-  "version": "1.7.2",
-  "private": true,
+  "name": "socks5-tunnel-node",
+  "version": "1.8.0",
+  "description": "HTTP tunnel with socks5 support",
+  "private": false,
+  "main": "tunnel.js",
   "scripts": {
     "start": "node ./tunnel.js",
-    "postinstall" : "rm -Rf ./public/bootstrap/ && mkdir ./public/bootstrap/ && cp -r ./node_modules/bootstrap/dist ./public/bootstrap/dist"
+    "postinstall": "rm -Rf ./public/bootstrap/ && mkdir ./public/bootstrap/ && cp -r ./node_modules/bootstrap/dist ./public/bootstrap/dist"
   },
+  "author": "Anderson de Oliveira Contreira",
+  "contributors": [
+    {
+      "name": "Allysson Matheus dos Santos",
+      "email": "allysson.lp@gmail.com",
+      "url": "https://github.com/allyssonm"
+    }
+  ],
+  "license": "MIT",
   "dependencies": {
     "body-parser": "~1.16.0",
     "express": "~4.14.1",
@@ -15,14 +26,15 @@
     "socks5-https-client": "1.2.0",
     "serve-favicon": "2.4.1",
     "utf8": "2.1.2",
-    "mustache":"2.3.0",
-    "forever-monitor":"1.7.1",
-    "chai": "^3.5.0",
-    "mocha": "^2.3.1",
+    "mustache": "2.3.0",
+    "forever-monitor": "1.7.1",
     "uuid": "^3.0.1",
-    "bootstrap":"3.3.7",
+    "bootstrap": ">=3.4.1",
     "winston": "^2.3.1",
     "moment": "^2.18.1"
-
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.3.1"
   }
 }
